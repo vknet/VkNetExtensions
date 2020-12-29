@@ -177,5 +177,16 @@ namespace VkNetExtensions
 				peerId,
 				$"{filename}{(txt ? ".txt" : "")}");
 		}
+
+		/// <summary>
+		/// Получает кликабельную ссылку на юзера или сообщество
+		/// </summary>
+		/// <param name="id">id пользователя или сообщества (у сообщества с минусом)</param>
+		/// <param name="text">Текст ссылки</param>
+		/// <returns></returns>
+		public static string GetClickableLinkById(this long id, string text)
+		{
+			return $"[{(id > 0 ? $"id{id}" : $"club{-id}")}|{text.Replace("]", "&#93;")}]";
+		}
 	}
 }
