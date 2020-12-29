@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using VkNet.Abstractions;
@@ -274,6 +275,45 @@ namespace VkNetExtensions
 						+ " }  return admins;";
 
 			return api.Execute.ExecuteAsync<ReadOnlyCollection<ConversationMember>>(script);
+		}
+
+		/// <summary>
+		/// Возвращает количество участников беседы
+		/// </summary>
+		/// <param name="api"></param>
+		/// <param name="peerId"></param>
+		/// <returns></returns>
+		public static Task<int> GetCountMembersInConversation(IVkApi api, long peerId)
+		{
+			var script = "return API.messages.getConversationMembers({ \"peer_id\":"
+						+ peerId
+						+ "}).items.length;";
+			return api.Execute.ExecuteAsync<int>(script);
+		}
+
+		/// <summary>
+		/// Возвращает рандомного участника беседы
+		/// </summary>
+		/// <param name="api"></param>
+		/// <param name="peerId"></param>
+		/// <param name="random">Случайное число (получите его через (new Random).Next(0, 999999), только не создавайте экземпляр рандома каждый раз как в примере</param>
+		/// <returns>ID рандомного участника беседы. Если произошла какая-то ошибка, вернёт null.</returns>
+		public static async Task<long?> GetRandomMemberInConversation(IVkApi api, long peerId, int random)
+		{
+			var stringBuilder = new StringBuilder();
+			stringBuilder.Append($"var members=API.messages.getConversationMembers({{ \"peer_id\":{peerId}}}).items;");
+			stringBuilder.Append($"return members[{random}%members.length].member_id;");
+			try
+			{
+				var text = await api.Execute.ExecuteAsync(stringBuilder.ToString());
+				if (long.TryParse(text, out var id)) return id;
+
+				return null;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 	}
 }
