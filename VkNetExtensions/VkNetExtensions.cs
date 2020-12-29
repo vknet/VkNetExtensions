@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using VkNet.Abstractions;
 using VkNet.Enums.Filters;
+using VkNet.Model;
 
 namespace VkNetExtensions
 {
@@ -42,6 +44,18 @@ namespace VkNetExtensions
 			{
 				return null;
 			}
+		}
+
+		/// <summary>
+		/// Получить реплай сообщение (если есть) или пересланные сообщения
+		/// </summary>
+		/// <param name="message"></param>
+		/// <returns></returns>
+		public static IEnumerable<Message> GetForwardedMessages(this Message message)
+		{
+			if (message.ReplyMessage != null) return new[] {message.ReplyMessage};
+
+			return message.ForwardedMessages;
 		}
 	}
 }
