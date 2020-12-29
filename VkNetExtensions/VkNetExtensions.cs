@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using VkNet.Abstractions;
+using VkNet.Enums;
 using VkNet.Enums.Filters;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
@@ -187,6 +188,68 @@ namespace VkNetExtensions
 		public static string GetClickableLinkById(this long id, string text)
 		{
 			return $"[{(id > 0 ? $"id{id}" : $"club{-id}")}|{text.Replace("]", "&#93;")}]";
+		}
+
+		/// <summary>
+		/// Возвращает из аргумента id пользователя или сообщества, если найдёт.
+		/// </summary>
+		/// <param name="api"></param>
+		/// <param name="argument"></param>
+		/// <returns>ID пользователя или сообщества, или null</returns>
+		public static async Task<long?> GetUserOrCommunityIdFromArgument(IVkApi api, string argument)
+		{
+			try
+			{
+				if (argument.Contains("[id"))
+				{
+					var indexStart = argument.IndexOf('d') + 1;
+					var indexEnd = argument.IndexOf('|');
+					var id = argument.Substring(indexStart, indexEnd - indexStart);
+
+					return Convert.ToInt64(id);
+				} else if (argument.Contains("club"))
+				{
+					var indexStart = argument.IndexOf('b') + 1;
+					var indexEnd = argument.IndexOf('|');
+					var id = argument.Substring(indexStart, indexEnd - indexStart);
+
+					return -Convert.ToInt64(id);
+				}
+			}
+			catch
+			{
+				// ignored
+			}
+
+			if (argument.Contains("vk.com/"))
+			{
+				if (argument.Contains("vk.com/id") && long.TryParse(argument.Substring(argument.LastIndexOf('d') + 1), out var id3))
+					return id3;
+
+				var id = await GetIdForUserOrCommunitiesFromTextLink(api, argument);
+
+				if (id != 0) return id;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Получает id пользователя или сообщества из ссылки подобной "vk.com/durov".
+		/// Возвращает 0, если это ссылка не на пользователя или сообщество.
+		/// </summary>
+		/// <param name="api"></param>
+		/// <param name="link">Например "vk.com/durov" или "https://vk.com/durov".</param>
+		/// <returns>id пользователя или сообщества.</returns>
+		public static async Task<long> GetIdForUserOrCommunitiesFromTextLink(IVkApi api, string link)
+		{
+			var id = await api.Utils.ResolveScreenNameAsync(link.Substring(link.LastIndexOf('/') + 1));
+
+			if (id?.Id == null || id.Type == VkObjectType.Application) return 0;
+
+			if (id.Type == VkObjectType.Group) return -id.Id.Value;
+
+			return id.Id.Value;
 		}
 	}
 }
