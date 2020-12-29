@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -250,6 +251,29 @@ namespace VkNetExtensions
 			if (id.Type == VkObjectType.Group) return -id.Id.Value;
 
 			return id.Id.Value;
+		}
+
+		/// <summary>
+		/// Возвращает администраторов беседы.
+		/// Первый в массиве является создателем (но это не точно, т.к. создатель может выйти из беседы).
+		/// Метод может упасть при +2000 участников, т.к. выполняется через execute и проходит всех участников в цикле.
+		/// Кто хочет - может оптимизировать. Мне просто лень.
+		/// </summary>
+		public static Task<ReadOnlyCollection<ConversationMember>> GetAdminsConversationAsync(IVkApi api, long peerId)
+		{
+			var script = "var members = API.messages.getConversationMembers("
+						+ "{ \"peer_id\":"
+						+ peerId
+						+ "}).items;"
+						+ " var admins = [];"
+						+ " var i = 0;"
+						+ " while (i < members.length)"
+						+ " { if (members[i].is_admin)"
+						+ " admins.push(members[i]);"
+						+ " i = i + 1;"
+						+ " }  return admins;";
+
+			return api.Execute.ExecuteAsync<ReadOnlyCollection<ConversationMember>>(script);
 		}
 	}
 }
