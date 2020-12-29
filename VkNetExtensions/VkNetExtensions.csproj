@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>net45;net461;netstandard2.0;net5.0</TargetFrameworks>
+	<Authors>inyutin_maxim</Authors>
+	<LangVersion>latest</LangVersion>
+	<RepositoryType>GIT</RepositoryType>
+	<PackageTags>vk;vk api;vknet;vkontakte;api</PackageTags>
+	<RepositoryUrl>https://github.com/vknet/vknetextensions</RepositoryUrl>
+	<PackageLicenseFile>LICENCE</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup>
+	<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+	<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+	<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+	<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+	<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+	<GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+	<GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+	<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+	<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+	<None Include="..\LICENCE" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+bin/
+obj/
+/packages/
+/.idea/*
+v16/
+.vs/
+mono_crash.mem.*
+*csproj.DotSettings
+*sln.DotSettings.user.DotSettings
+/*.sln.DotSettings.user
+/Reo.Spreadsheet/wwwroot/node_modules/
