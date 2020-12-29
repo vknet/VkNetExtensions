@@ -19,6 +19,11 @@ namespace VkNetExtensions
 	public static class VkNetExtensions
 	{
 		/// <summary>
+		/// С этого числа начинаются ID бесед
+		/// </summary>
+		public const long COUNT_CONVERSATION = 2000000000;
+
+		/// <summary>
 		/// Получить дату регистрации пользователя или дату создания сообщества
 		/// </summary>
 		/// <param name="api"></param>
@@ -59,6 +64,47 @@ namespace VkNetExtensions
 			if (message.ReplyMessage != null) return new[] {message.ReplyMessage};
 
 			return message.ForwardedMessages;
+		}
+
+		/// <summary>
+		/// Возвращает зрительный номер беседы (не настоящий) из реального или зрительного
+		/// </summary>
+		public static long GetVisualPeerId(this long peerId)
+		{
+			if (peerId < COUNT_CONVERSATION) return peerId;
+
+			return peerId - COUNT_CONVERSATION;
+		}
+
+		/// <summary>
+		/// Возвращает зрительный номер беседы (не настоящий) из реального или зрительного
+		/// </summary>
+		public static long? GetVisualPeerId(this long? peerId)
+		{
+			if (peerId == null) return null;
+
+			return GetVisualPeerId(peerId.Value);
+
+		}
+
+		/// <summary>
+		/// Возвращает реальный номер беседы из зрительного или реального
+		/// </summary>
+		public static long? GetRealPeerId(this long? peerId)
+		{
+			if (peerId == null) return null;
+
+			return GetRealPeerId(peerId.Value);
+		}
+
+		/// <summary>
+		/// Возвращает реальный номер беседы из зрительного или реального
+		/// </summary>
+		public static long GetRealPeerId(this long peerId)
+		{
+			if (peerId > COUNT_CONVERSATION) return peerId;
+
+			return peerId + COUNT_CONVERSATION;
 		}
 
 		/// <summary>
