@@ -108,6 +108,35 @@ namespace VkNetExtensions
 		}
 
 		/// <summary>
+		/// Возвращает текущее время с серверов ВК.
+		/// Делает запрос лишь при первом использовании, в остальных случаях считается через закэшированный результат.
+		/// IVkApi обязательно передавать только при первом использовании, экземпляр будет закэширован.
+		/// Если нужно будет обновить время, используйте VkDate.UpdateVkDate(api).
+		/// </summary>
+		/// <param name="api"></param>
+		/// <param name="timezone">Часовой пояс</param>
+		/// <returns></returns>
+		public static DateTime DateTime(IVkApi? api = null, int timezone = 0)
+		{
+			if (api == null)
+			{
+				api = VkDate.VkApi;
+
+				if (api == null)
+				{
+					throw new Exception("IVkApi == null");
+				}
+			} else
+			{
+				VkDate.VkApi = api;
+			}
+
+			if (VkDate.VkDateObject == null) VkDate.UpdateVkDate(api);
+
+			return VkDate.VkDateObject!.Get().AddHours(timezone);
+		}
+
+		/// <summary>
 		///     Загружает документ на сервер ВК.
 		/// </summary>
 		/// <param name="vkApi"></param>
