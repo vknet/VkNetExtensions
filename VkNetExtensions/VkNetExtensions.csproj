@@ -8,7 +8,6 @@
 	<PackageTags>vk;vk api;vknet;vkontakte;api</PackageTags>
 	<RepositoryUrl>https://github.com/vknet/vknetextensions</RepositoryUrl>
 	<PackageLicenseFile>LICENCE</PackageLicenseFile>
-	<Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
 	<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -24,9 +23,6 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-	<None Include="..\LICENCE" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="VkNet" Version="1.58.0" />
+	<None Include="..\LICENCE" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
